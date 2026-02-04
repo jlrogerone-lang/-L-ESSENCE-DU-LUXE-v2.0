@@ -1,0 +1,190 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  ARQUITECTURA DE CARPETAS - L'ESSENCE DU LUXE v2.0          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+L:\Essence-du-Luxe\
+│
+├── 📄 RAÍZ (Configuración & Scripts)
+│   ├── app.json ........................... Configuración Expo
+│   ├── package.json ....................... Dependencias npm
+│   ├── tsconfig.json ...................... TypeScript config
+│   ├── babel.config.js .................... Babel + NativeWind
+│   ├── tailwind.config.js ................. Tema colores
+│   ├── Metro.config.js .................... Metro Bundler
+│   ├── AutoDeploy.ps1 .................... 🎯 Script PowerShell maestro
+│   ├── .env.local ......................... Variables de entorno (local)
+│   ├── .gitignore ......................... Excluir sensibles
+│   └── eas.json ........................... EAS Build config
+│
+├── 📁 src/
+│   │
+│   ├── App.tsx ............................ 🎯 Punto de entrada + Navegación
+│   │
+│   ├── contexts/
+│   │   ├── AuthContext.tsx ................ Estado auth (Firebase + token)
+│   │   ├── InventoryContext.tsx .......... Estado inventario (Cava)
+│   │   ├── BibliothequeContext.tsx ....... Búsquedas + caché
+│   │   └── MonetizationContext.tsx ....... Plan subscription actual
+│   │
+│   ├── services/
+│   │   ├── AuthService.ts ................ 🎯 Firebase + Google Sign-In
+│   │   ├── GeminiService.ts .............. 🎯 6 Pilares + IA
+│   │   ├── BibliothequeService.ts ........ 🎯 Búsqueda web + OCR
+│   │   ├── MonetizationService.ts ........ RevenueCat + AdMob
+│   │   ├── FirebaseService.ts ............ CRUD Firebase Database
+│   │   └── StorageService.ts ............. AsyncStorage + SecureStore
+│   │
+│   ├── screens/
+│   │   ├── AtelierScreen.tsx ............ 🏛️ Dashboard (Tab 1)
+│   │   ├── CavaScreen.tsx .............. 🏺 Inventario (Tab 2)
+│   │   ├── BibliothequeScreen.tsx ....... 📚 NUEVA - Búsqueda web (Tab 3)
+│   │   ├── LeNezScreen.tsx .............. 🧠 Lab IA + OCR (Tab 4)
+│   │   ├── HeritageScreen.tsx ........... 📖 Narrativa (Tab 5)
+│   │   └── ReglagesScreen.tsx ........... ⚙️ Ajustes (Tab 6)
+│   │
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── GlassCard.tsx ............ Card glassmorphism base
+│   │   │   ├── GoldButton.tsx ........... Botón luxury
+│   │   │   ├── PopUpBiblio.tsx .......... PopUp Bibliothèque (NEW)
+│   │   │   ├── PopUpAudit6P.tsx ......... PopUp 6 Pilares (NEW)
+│   │   │   ├── OcrResult.tsx ............ PopUp OCR result (NEW)
+│   │   │   ├── AdBanner.tsx ............. Banner AdMob
+│   │   │   └── SubscriptionPaywall.tsx .. Paywall RevenueCat
+│   │   │
+│   │   └── screens/
+│   │       ├── AtelierCard.tsx ......... Tarjeta Layering día
+│   │       ├── PerfumeCard.tsx ......... Tarjeta perfume
+│   │       ├── BiblioResultCard.tsx .... Card resultado búsqueda (NEW)
+│   │       ├── Audit6PCard.tsx ......... Card 6 Pilares (NEW)
+│   │       ├── LayeringGrid.tsx ........ Grid de layerings
+│   │       └── SearchBar.tsx ........... Búsqueda inteligente
+│   │
+│   ├── navigation/
+│   │   ├── RootNavigator.tsx ........... 🎯 Bottom Tab Navigator (6 tabs)
+│   │   └── types.ts .................... Tipos de navegación
+│   │
+│   ├── types/
+│   │   └── index.ts .................... 🎯 Interfaces maestras
+│   │
+│   ├── data/
+│   │   └── audit6pilars.ts ............. Plantillas 6 Pilares
+│   │
+│   ├── utils/
+│   │   ├── helpers.ts .................. Funciones útiles
+│   │   ├── validators.ts ............... Validaciones
+│   │   └── audit6pilars.ts ............. Lógica de auditoría (NEW)
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts .................. Hook autenticación
+│   │   ├── useInventory.ts ............. Hook inventario
+│   │   ├── useBibliothoque.ts .......... Hook búsqueda (NEW)
+│   │   ├── useAudit6P.ts ............... Hook auditoría (NEW)
+│   │   └── useMonetization.ts .......... Hook suscripción
+│   │
+│   └── styles/
+│       ├── colors.ts ................... Paleta colores OLED
+│       └── theme.ts .................... Tema global
+│
+├── 📁 assets/
+│   ├── icon.png ......................... 512x512
+│   ├── splash.png ....................... 1080x1920
+│   ├── adaptive-icon.png ................ 108x108
+│   ├── images/
+│   │   ├── logo.png
+│   │   ├── background-oled.png
+│   │   └── perfume-placeholder.png
+│   └── fonts/
+│       ├── Garamond-Regular.ttf
+│       ├── Garamond-Bold.ttf
+│       ├── Montserrat-Regular.ttf
+│       └── Montserrat-Bold.ttf
+│
+├── 📁 docs/
+│   ├── MANUAL_ARQUITECTO.md ........... 🎯 Guía completa (ver BLOQUE 4)
+│   ├── SETUP_FIREBASE.md .............. Pasos Google Cloud (BLOQUE 4)
+│   ├── SETUP_REVENUECAT.md ............ RevenueCat setup (BLOQUE 4)
+│   ├── API_DOCUMENTATION.md ........... Documentación API (BLOQUE 4)
+│   └── 6PILARES_EXPLICACION.md ........ Cómo funcionan 6 Pilares (BLOQUE 4)
+│
+└── 📁 .github/
+    └── workflows/
+        └── deploy.yml .................. CI/CD para compilación automática
+
+════════════════════════════════════════════════════════════════════════════════
+📊 RESUMEN ESTADÍSTICO
+════════════════════════════════════════════════════════════════════════════════
+
+Archivos TypeScript:        25+
+Componentes:                15+
+Pantallas:                  6
+Servicios:                  6
+Contextos:                  4
+Hooks Custom:               5
+Líneas de código:           5,000+
+Documentación:              3,000+
+
+════════════════════════════════════════════════════════════════════════════════
+🎯 DEPENDENCIAS CLAVE (package.json)
+════════════════════════════════════════════════════════════════════════════════
+
+RUNTIME:
+├─ react-native: 0.73.0
+├─ expo: ~54.0.0
+├─ typescript: ~5.3.0
+├─ @react-navigation/native: 6.1.10
+├─ @react-navigation/bottom-tabs: 6.5.11
+├─ nativewind: 2.0.11
+├─ google-generative-ai: 0.3.0 (Gemini)
+├─ firebase: ^10.0.0 (Auth + Realtime DB)
+├─ react-native-google-mobile-ads: 14.0.0 (AdMob)
+├─ revenuecat-react-native: 7.19.0 (Monetización)
+├─ expo-camera: 14.1.0 (OCR)
+├─ expo-secure-store: 13.0.0 (Tokens encriptados)
+├─ expo-blur: 13.0.0 (Glassmorphism)
+├─ expo-haptics: 12.8.0 (Feedback)
+├─ react-native-reanimated: 3.6.0 (Animaciones)
+├─ zustand: 4.4.0 (Estado alternativo)
+└─ axios: ^1.6.0 (HTTP requests)
+
+DEV:
+├─ @types/react-native: ^0.73.0
+├─ @types/node: ^20.0.0
+├─ tailwindcss: 3.4.0
+├─ prettier: ^3.0.0
+├─ eslint: ^8.0.0
+└─ jest: ^29.0.0 (testing)
+
+════════════════════════════════════════════════════════════════════════════════
+🎯 VARIABLES DE ENTORNO (.env.local)
+════════════════════════════════════════════════════════════════════════════════
+
+FIREBASE:
+EXPO_PUBLIC_FIREBASE_API_KEY=xxxxx
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=xxxxx
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=xxxxx
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=xxxxx
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=xxxxx
+EXPO_PUBLIC_FIREBASE_APP_ID=xxxxx
+
+GOOGLE OAUTH (Obtenido en Firebase Console):
+EXPO_PUBLIC_GOOGLE_CLIENT_ID=xxxxx (para Google Sign-In)
+
+REVENUECAT:
+EXPO_PUBLIC_REVENUECAT_API_KEY=xxxxx
+
+ADMOB:
+EXPO_PUBLIC_ADMOB_APP_ID=xxxxx
+EXPO_PUBLIC_ADMOB_BANNER_ID=xxxxx
+EXPO_PUBLIC_ADMOB_INTERSTITIAL_ID=xxxxx
+
+GOOGLE CUSTOM SEARCH:
+EXPO_PUBLIC_GOOGLE_SEARCH_API_KEY=xxxxx
+EXPO_PUBLIC_GOOGLE_SEARCH_ENGINE_ID=xxxxx
+
+════════════════════════════════════════════════════════════════════════════════
+
+✅ ARQUITECTURA COMPLETA DEFINIDA
+
+SIGUIENTE: BLOQUE 2 - AutoDeploy.ps1 + app.json + package.json
+

@@ -1,0 +1,91 @@
+{
+  "expo": {
+    "name": "L'Essence du Luxe",
+    "slug": "essence-du-luxe-v2",
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.essenceduluxe.perfumerie",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.essenceduluxe.perfumerie",
+      "versionCode": 2,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/icon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Acceso a cámara para escanear perfumes"
+        }
+      ],
+      "expo-secure-store",
+      "expo-blur",
+      "expo-haptics",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26,
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0",
+            "usesCleartextTraffic": false
+          }
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permite acceso a tu galería"
+        }
+      ]
+    ],
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/xxxxxxx"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "xxxxxxx"
+      },
+      "firebaseConfig": {
+        "apiKey": "${EXPO_PUBLIC_FIREBASE_API_KEY}",
+        "authDomain": "${EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN}",
+        "projectId": "${EXPO_PUBLIC_FIREBASE_PROJECT_ID}",
+        "storageBucket": "${EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET}",
+        "messagingSenderId": "${EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}",
+        "appId": "${EXPO_PUBLIC_FIREBASE_APP_ID}"
+      }
+    }
+  }
+}

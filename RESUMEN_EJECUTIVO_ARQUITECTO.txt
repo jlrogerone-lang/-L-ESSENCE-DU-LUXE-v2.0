@@ -1,0 +1,285 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║         🏛️ L'ESSENCE DU LUXE v2.0 - ARQUITECTURA DEFINITIVA PRODUCCIÓN 🏛️   ║
+║                                                                              ║
+║              RESUMEN EJECUTIVO: "THE GOLDEN RULE - COSTE CERO"              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+FECHA: Febrero 2025
+ESTADO: 🟢 CONSTRUCCIÓN EN PROGRESO
+ENTREGA: Completa en 4 bloques
+
+════════════════════════════════════════════════════════════════════════════════
+🎯 THE GOLDEN RULE - ESTRATEGIA "COSTE CERO OPERATIVO"
+════════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA RESUELTO:
+├─ ❌ ANTES: Desarrollador paga API calls de Gemini + Google Cloud
+├─ ❌ ANTES: Usuario necesita configurar API Keys manualmente
+└─ ✅ AHORA: Costo CERO para desarrollador
+
+SOLUCIÓN IMPLEMENTADA:
+
+1️⃣ GOOGLE SIGN-IN (Firebase Auth) - ZERO CONFIG
+   ├─ Usuario: Pulsa botón "Conectar con Google"
+   ├─ App: Firebase autentica automáticamente
+   ├─ Resultado: Usuario logueado, CERO configuración manual
+   └─ Costo: GRATIS (Firebase Auth es free hasta 50k eventos/mes)
+
+2️⃣ GOOGLE CLOUD FREE TIER - TOKEN DELEGATION
+   ├─ El usuario autentica con Google (su token)
+   ├─ Ese token se usa para Gemini API requests
+   ├─ Gemini consume de la cuota GRATUITA del usuario (100k tokens/mes)
+   ├─ El desarrollador (yo) NO pago NADA
+   └─ Flujo: User Auth → Google Token → Gemini API (en nombre del usuario)
+
+3️⃣ FIREBASE REAL-TIME DATABASE - COSTO CERO
+   ├─ Almacenamiento: max 100MB gratis
+   ├─ Lecturas: 100k/día (más que suficiente)
+   ├─ Escrituras: 50k/día (amplio margen)
+   └─ Costo: FREE TIER indefinido
+
+4️⃣ GOOGLE CUSTOM SEARCH API - BÚSQUEDA WEB LIBRE
+   ├─ 100 searches/día FREE (Bibliothèque Universelle)
+   ├─ Si supera: contratos de pago (pero usuario lo activa, no yo)
+   └─ Implementación: Gemini + Web Search API combinadas
+
+════════════════════════════════════════════════════════════════════════════════
+📋 FLUJO DE AUTENTICACIÓN (UX ZERO-CONFIG)
+════════════════════════════════════════════════════════════════════════════════
+
+USUARIO VE:
+┌────────────────────────────────────────────────────────────────┐
+│                    L'ESSENCE DU LUXE                           │
+│                                                                │
+│   ¿Bienvenido/a! Conecta con tu cuenta Google para empezar   │
+│                                                                │
+│        [Conectar con Google] ← Único botón necesario         │
+│                                                                │
+│   ✨ Sin API Keys, sin configuración, sin complicaciones     │
+└────────────────────────────────────────────────────────────────┘
+
+DETRÁS DE ESCENAS:
+├─ 1. Click → Firebase Auth (Google Sign-In)
+├─ 2. Google OAuth flow (Usuario autoriza app)
+├─ 3. Token JWT guardado en Secure Storage (expo-secure-store)
+├─ 4. Token usado para Gemini API requests automáticamente
+├─ 5. Todos los consumos asignados a cuenta de usuario (FREE TIER)
+└─ 6. App lista para usar (CERO pasos de config)
+
+════════════════════════════════════════════════════════════════════════════════
+✨ SUPER FUNCIONES IMPLEMENTADAS
+════════════════════════════════════════════════════════════════════════════════
+
+1. BIBLIOTHÈQUE UNIVERSELLE (Nueva 6ª pestaña)
+   ├─ Búsqueda web infinita de perfumes
+   ├─ PopUp Glassmorphism con notas + historia
+   ├─ "Añadir a Cava" → Trigger Auto-Auditoría
+   └─ Integración: Google Custom Search API + Gemini Vision
+
+2. AUTO-AUDITORÍA 6 PILARES (IA Detecta y Rellena)
+   ├─ Pilar 1: Nombre Operación + Estrategia (Generado IA)
+   ├─ Pilar 2: Activos Reales Utilizados (Detecta de Bibliothèque)
+   ├─ Pilar 3: Coste vs. Referente (Auditoría financiera en €)
+   ├─ Pilar 4: Protocolo Paso a Paso (Técnica quirúrgica automática)
+   ├─ Pilar 5: Factor Tiempo Secado (Instrucciones precisas)
+   ├─ Pilar 6: Compatibilidad Química (% parentesco detectado)
+   └─ Resultado: Ficha técnica COMPLETA, auto-generada, 0 input manual
+
+3. OCR "EL OJO IA" (Cámara + Visión)
+   ├─ Apunta a frasco de perfume
+   ├─ Gemini Vision lo identifica
+   ├─ Busca en Bibliothèque automáticamente
+   ├─ Aplica 6 Pilares en background
+   └─ PopUp: "¿Añadir a Cava?" (con todo listo)
+
+4. GÉNESIS CUÁNTICA (Algoritmo de Creación)
+   ├─ Analiza inventario del usuario
+   ├─ Crea nuevos layerings válidos
+   ├─ Aplica 6 Pilares a cada creación
+   ├─ Sugiere compatibilidades químicas
+   └─ Explicación: "Por qué este layering funcionaría"
+
+5. MONETIZACIÓN AUTOMÁTICA
+   ├─ Free: 5 layerings/mes, sin auditoría 6 pilares, con ads
+   ├─ Paid (Alquimista €4.99/mes):
+   │  ├─ Auditoría 6 pilares ilimitada
+   │  ├─ Génesis Cuántica ilimitada
+   │  ├─ OCR ilimitado
+   │  ├─ Bibliothèque sin límites
+   │  └─ Sin anuncios
+   └─ RevenueCat + AdMob automático
+
+════════════════════════════════════════════════════════════════════════════════
+🏗️ ARQUITECTURA TÉCNICA
+════════════════════════════════════════════════════════════════════════════════
+
+STACK:
+├─ Frontend: React Native 0.73 + Expo 54 + TypeScript
+├─ UI: NativeWind (Tailwind) + Reanimated 3 + BlurView
+├─ Auth: Firebase Authentication (Google Sign-In)
+├─ Backend: Firebase Realtime Database (Free Tier)
+├─ AI: Google Gemini (Token delegation = coste cero)
+├─ Search: Google Custom Search API (100/día free)
+├─ Monetización: RevenueCat + AdMob
+└─ Storage: expo-secure-store (tokens encriptados)
+
+CONTEXTOS GLOBALES:
+├─ AuthContext (usuario + token Google)
+├─ InventoryContext (Cava)
+├─ BibliothequeContext (caché de búsquedas)
+└─ MonetizationContext (subscription status)
+
+SERVICIOS CORE:
+├─ AuthService (Firebase + Google Sign-In)
+├─ GeminiService (6 Pilares auto-generados)
+├─ BibliothequeService (búsqueda web + OCR)
+├─ MonetizationService (RevenueCat + AdMob)
+└─ FirebaseService (datos persistentes)
+
+════════════════════════════════════════════════════════════════════════════════
+🎨 PANTALLAS (6 TABS + Navegación)
+════════════════════════════════════════════════════════════════════════════════
+
+Tab 1: 🏛️ ATELIER (Dashboard)
+├─ "Layering del Día" (por fecha)
+├─ Auditoría 6 Pilares del día
+├─ Recomendación IA basada en inventario
+└─ Quick-actions
+
+Tab 2: 🏺 CAVA (Inventario)
+├─ Grid de perfumes con fotos
+├─ Búsqueda + filtros
+├─ Card con 6 Pilares resumido
+└─ Editar / Auditar
+
+Tab 3: 📚 BIBLIOTHÈQUE (NUEVA)
+├─ Barra búsqueda con predicción
+├─ Resultados web en tiempo real
+├─ PopUp Glassmorphism: Detalles + "Añadir a Cava"
+├─ Historial de búsquedas
+└─ Favoritos
+
+Tab 4: 🧠 LE NEZ (Laboratorio IA)
+├─ Génesis Cuántica
+├─ OCR (cámara)
+├─ Análisis de similitud
+└─ Sugerencias automáticas
+
+Tab 5: 📖 HÉRITAGE (Narrativa)
+├─ Historia del Layering (IA generada)
+├─ "El Origen del Código" (App story por IA)
+└─ Engagement cards
+
+Tab 6: ⚙️ RÉGLAGES (Ajustes)
+├─ Perfil + Google Auth status
+├─ Subscription status (RevenueCat)
+├─ Dark/Light mode
+├─ Idioma (FR/ES/EN)
+└─ Logout
+
+════════════════════════════════════════════════════════════════════════════════
+📊 MONETIZACIÓN DETALLADA
+════════════════════════════════════════════════════════════════════════════════
+
+PLAN FREE:
+├─ Precio: €0
+├─ Características:
+│  ├─ 5 layerings guardados/mes
+│  ├─ Acceso lectura Bibliothèque
+│  ├─ 1 auditoría 6 pilares/semana
+│  ├─ Anuncios: Banner + Interstitial
+│  └─ Sin OCR ilimitado
+├─ RevenueCat: Tracking de conversión
+└─ AdMob: Banner (bottom) + Interstitial (guardar)
+
+PLAN ALQUIMISTA:
+├─ Precio: €4.99/mes (RevenueCat)
+├─ Características:
+│  ├─ Auditoría 6 pilares ILIMITADA
+│  ├─ Génesis Cuántica ilimitada
+│  ├─ OCR ilimitado
+│  ├─ Bibliothèque búsquedas ilimitadas
+│  ├─ Sin anuncios
+│  └─ Prioridad en procesamiento IA
+├─ RevenueCat: Entitlements automáticos
+└─ AdMob: DESHABILITADO
+
+PLAN MAESTRO:
+├─ Precio: €9.99/mes (RevenueCat)
+├─ Características:
+│  ├─ TODO de Alquimista
+│  ├─ Exportar reportes en PDF
+│  ├─ Acceso API privado (futuro)
+│  ├─ Dark mode premium (skins exclusivas)
+│  └─ Soporte prioritario
+└─ RevenueCat: Entitlements premium
+
+════════════════════════════════════════════════════════════════════════════════
+🔐 SEGURIDAD & PRIVACIDAD
+════════════════════════════════════════════════════════════════════════════════
+
+TOKENS:
+├─ Google JWT: Almacenado en expo-secure-store (encriptado)
+├─ Firebase ID Token: Refrescado automáticamente
+├─ Gemini requests: Firmados con token del usuario (su responsabilidad)
+└─ NO se almacenan API Keys en cliente
+
+DATOS:
+├─ Firebase Realtime DB: Encriptado en tránsito (HTTPS)
+├─ Inventario: Privado por usuario (UID Firebase)
+├─ Búsquedas Bibliothèque: Caché local (no se envía a servidor)
+└─ Auditorías: Almacenadas en Firebase per-user
+
+PERMISOS ANDROID:
+├─ INTERNET (necesario)
+├─ CAMERA (OCR)
+├─ INTERNET (búsqueda web)
+└─ Mínimos, sin tracking
+
+════════════════════════════════════════════════════════════════════════════════
+🚀 ENTREGA INMEDIATA (4 BLOQUES)
+════════════════════════════════════════════════════════════════════════════════
+
+BLOQUE 1 (AHORA): ✅
+├─ Resumen Ejecutivo (este documento)
+└─ Arquitectura de Carpetas
+
+BLOQUE 2 (15 min):
+├─ AutoDeploy.ps1 (PowerShell maestro)
+├─ app.json (configuración completa)
+└─ package.json (dependencias finales)
+
+BLOQUE 3 (15 min):
+├─ App.tsx (navegación + contextos)
+├─ AuthService.ts (Firebase + Google Sign-In)
+├─ GeminiService.ts (6 Pilares)
+└─ BibliothequeService.ts (búsqueda web)
+
+BLOQUE 4 (20 min):
+├─ Pantallas (BibliothequeScreen, OCR, etc)
+├─ Componentes (PopUps, Cards, etc)
+├─ Manual del Arquitecto (Google Cloud setup)
+└─ Scripts de despliegue
+
+════════════════════════════════════════════════════════════════════════════════
+✅ CONFIRMACIÓN
+════════════════════════════════════════════════════════════════════════════════
+
+THE GOLDEN RULE CONFIRMADA:
+✅ Google Sign-In: Zero configuración manual para usuario
+✅ Token Delegation: Gemini requests con token del usuario
+✅ Firebase Free Tier: Datos + Auth sin coste
+✅ Google Custom Search: 100 búsquedas/día FREE
+✅ Coste Operativo: €0 para desarrollador
+
+USUARIO SOLO VE:
+├─ [Conectar con Google] ← Botón único
+├─ App lista para usar
+└─ CERO pasos técnicos
+
+════════════════════════════════════════════════════════════════════════════════
+
+🎯 LISTA PARA BLOQUE 2
+

@@ -1,0 +1,27 @@
+{
+  "cli": {
+    "version": ">= 5.0.0",
+    "promptToConfigureProjects": true
+  },
+  "build": {
+    "production": {
+      "node": "18.13.0",
+      "npm": "8.19.3",
+      "env": {
+        "EXPO_USE_EAS_BUILD": "true"
+      }
+    },
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
