@@ -23,6 +23,9 @@ class GeminiService {
   private getModel(): GenerativeModel {
     if (!this.model) {
       const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+      if (!apiKey) {
+        throw new Error('EXPO_PUBLIC_GEMINI_API_KEY is not configured');
+      }
       const genAI = new GoogleGenerativeAI(apiKey);
       this.model = genAI.getGenerativeModel({ model: 'gemini-pro' });
       this.visionModel = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
@@ -34,7 +37,10 @@ class GeminiService {
     if (!this.visionModel) {
       this.getModel(); // initializes both
     }
-    return this.visionModel!;
+    if (!this.visionModel) {
+      throw new Error('Vision model failed to initialize. Check EXPO_PUBLIC_GEMINI_API_KEY.');
+    }
+    return this.visionModel;
   }
 
   // ─── 6 Pilares Full Audit ─────────────────────────────────────────────────

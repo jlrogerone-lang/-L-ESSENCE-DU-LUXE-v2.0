@@ -1,9 +1,9 @@
 // ============================================================================
 // L'ESSENCE DU LUXE v2.0 - Authentication Service
 // Firebase Auth + Google Sign-In (Zero Config for User)
+// Uses shared Firebase config - NO duplicate initialization
 // ============================================================================
 
-import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import {
   getAuth,
   signInWithCredential,
@@ -15,19 +15,9 @@ import {
 } from 'firebase/auth';
 import * as SecureStore from 'expo-secure-store';
 import { AuthUser, GoogleAuthToken } from '../types';
+import { getFirebaseApp } from './firebaseConfig';
 
 const LOG_TAG = '[AuthService]';
-
-// ─── Firebase Config ────────────────────────────────────────────────────────
-
-const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY || '',
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN || '',
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || '',
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET || '',
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID || '',
-};
 
 // ─── Secure Store Keys ──────────────────────────────────────────────────────
 
@@ -39,13 +29,11 @@ const SECURE_KEYS = {
 };
 
 class AuthService {
-  private app: FirebaseApp;
   private auth: Auth;
   private authStateListeners: Array<(user: AuthUser | null) => void> = [];
 
   constructor() {
-    this.app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-    this.auth = getAuth(this.app);
+    this.auth = getAuth(getFirebaseApp());
     this.initAuthStateListener();
   }
 
@@ -69,6 +57,9 @@ class AuthService {
 
   async signInWithGoogle(idToken: string, accessToken: string): Promise<AuthUser> {
     try {
+      if (!idToken) {
+        throw new Error('Google ID token is required for authentication');
+      }
       console.log(LOG_TAG, 'Signing in with Google...');
       const credential = GoogleAuthProvider.credential(idToken, accessToken);
       const result = await signInWithCredential(this.auth, credential);

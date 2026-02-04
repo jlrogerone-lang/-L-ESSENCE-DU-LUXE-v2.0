@@ -1,9 +1,9 @@
 // ============================================================================
 // L'ESSENCE DU LUXE v2.0 - Firebase Realtime Database Service
 // CRUD Operations for all entities
+// Uses shared Firebase config - NO duplicate initialization
 // ============================================================================
 
-import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getDatabase,
   ref,
@@ -13,32 +13,20 @@ import {
   remove,
   push,
   onValue,
-  query,
-  orderByChild,
   Database,
   DataSnapshot,
   Unsubscribe,
 } from 'firebase/database';
 import { InventoryItem, Layering, Audit6Pilars, AuthUser } from '../types';
+import { getFirebaseApp } from './firebaseConfig';
 
 const LOG_TAG = '[FirebaseService]';
-
-const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY || '',
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN || '',
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || '',
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET || '',
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID || '',
-  databaseURL: `https://${process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'project'}-default-rtdb.europe-west1.firebasedatabase.app`,
-};
 
 class FirebaseService {
   private db: Database;
 
   constructor() {
-    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-    this.db = getDatabase(app);
+    this.db = getDatabase(getFirebaseApp());
   }
 
   // ─── User Profile ─────────────────────────────────────────────────────────
@@ -126,13 +114,20 @@ class FirebaseService {
 
   onInventoryChange(userId: string, callback: (items: InventoryItem[]) => void): Unsubscribe {
     const itemsRef = ref(this.db, `inventories/${userId}/items`);
-    return onValue(itemsRef, (snapshot: DataSnapshot) => {
-      if (!snapshot.exists()) {
+    return onValue(
+      itemsRef,
+      (snapshot: DataSnapshot) => {
+        if (!snapshot.exists()) {
+          callback([]);
+          return;
+        }
+        callback(Object.values(snapshot.val()) as InventoryItem[]);
+      },
+      (error) => {
+        console.error(LOG_TAG, 'Inventory listener error:', error);
         callback([]);
-        return;
-      }
-      callback(Object.values(snapshot.val()) as InventoryItem[]);
-    });
+      },
+    );
   }
 
   // ─── Layerings CRUD ──────────────────────────────────────────────────────

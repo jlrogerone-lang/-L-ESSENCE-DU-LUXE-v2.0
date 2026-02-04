@@ -1,13 +1,25 @@
 // ============================================================================
 // L'ESSENCE DU LUXE v2.0 - Monetization Service
 // RevenueCat + Google AdMob Integration
+// PRODUCTION: Real RevenueCat SDK calls for purchases & restore
 // ============================================================================
 
+import { Platform } from 'react-native';
+import Purchases, { PurchasesPackage, CustomerInfo } from 'react-native-purchases';
 import { SubscriptionPlan, Subscription, SubscriptionLimits } from '../types';
 import { PLAN_LIMITS, SUBSCRIPTION_PLANS } from '../utils/constants';
 import { storageService } from './StorageService';
 
 const LOG_TAG = '[MonetizationService]';
+
+// RevenueCat API keys from environment
+const REVENUECAT_API_KEY_ANDROID = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID || '';
+const REVENUECAT_API_KEY_IOS = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS || '';
+
+// RevenueCat entitlement identifiers matching dashboard configuration
+const RC_ENTITLEMENT_PREMIUM = 'premium';
+const RC_ENTITLEMENT_MASTER = 'master';
+const RC_ENTITLEMENT_LIFETIME = 'lifetime';
 
 // AdMob configuration
 const ADMOB_CONFIG = {
@@ -19,28 +31,97 @@ const ADMOB_CONFIG = {
 class MonetizationService {
   private currentSubscription: Subscription;
   private subscriptionListeners: Array<(sub: Subscription) => void> = [];
+  private isInitialized = false;
 
   constructor() {
     this.currentSubscription = this.getDefaultSubscription();
   }
 
-  // ─── Initialize RevenueCat ────────────────────────────────────────────────
+  // ─── Initialize RevenueCat SDK ──────────────────────────────────────────
 
-  async initialize(): Promise<void> {
+  async initialize(userId?: string): Promise<void> {
     try {
-      console.log(LOG_TAG, 'Initializing monetization...');
-      // Load saved subscription state
+      console.log(LOG_TAG, 'Initializing RevenueCat SDK...');
+
+      const apiKey = Platform.OS === 'ios' ? REVENUECAT_API_KEY_IOS : REVENUECAT_API_KEY_ANDROID;
+
+      if (!apiKey) {
+        console.warn(LOG_TAG, 'RevenueCat API key not configured. Using offline mode.');
+        const saved = await storageService.get<Subscription>('subscription_state');
+        if (saved) {
+          this.currentSubscription = saved;
+        }
+        return;
+      }
+
+      await Purchases.configure({ apiKey, appUserID: userId || undefined });
+      this.isInitialized = true;
+
+      // Set user attributes for analytics
+      if (userId) {
+        await Purchases.logIn(userId);
+      }
+
+      // Sync current entitlements from RevenueCat
+      await this.syncEntitlements();
+
+      // Listen for subscription changes
+      Purchases.addCustomerInfoUpdateListener((info: CustomerInfo) => {
+        this.handleCustomerInfoUpdate(info);
+      });
+
+      console.log(LOG_TAG, 'RevenueCat initialized. Plan:', this.currentSubscription.plan);
+    } catch (error) {
+      console.error(LOG_TAG, 'RevenueCat initialization failed:', error);
+      // Fallback to cached subscription
       const saved = await storageService.get<Subscription>('subscription_state');
       if (saved) {
         this.currentSubscription = saved;
       }
-      console.log(LOG_TAG, 'Current plan:', this.currentSubscription.plan);
-    } catch (error) {
-      console.error(LOG_TAG, 'Initialization failed:', error);
     }
   }
 
-  // ─── Purchase Subscription ────────────────────────────────────────────────
+  // ─── Sync Entitlements from RevenueCat ──────────────────────────────────
+
+  private async syncEntitlements(): Promise<void> {
+    try {
+      const customerInfo = await Purchases.getCustomerInfo();
+      this.handleCustomerInfoUpdate(customerInfo);
+    } catch (error) {
+      console.error(LOG_TAG, 'Failed to sync entitlements:', error);
+    }
+  }
+
+  private handleCustomerInfoUpdate(info: CustomerInfo): void {
+    const { entitlements } = info;
+    let plan: SubscriptionPlan = 'free';
+
+    if (entitlements.active[RC_ENTITLEMENT_LIFETIME]) {
+      plan = 'lifetime';
+    } else if (entitlements.active[RC_ENTITLEMENT_MASTER]) {
+      plan = 'master';
+    } else if (entitlements.active[RC_ENTITLEMENT_PREMIUM]) {
+      plan = 'alquimist';
+    }
+
+    const activeEntitlement = entitlements.active[RC_ENTITLEMENT_LIFETIME]
+      || entitlements.active[RC_ENTITLEMENT_MASTER]
+      || entitlements.active[RC_ENTITLEMENT_PREMIUM];
+
+    const newSubscription: Subscription = {
+      plan,
+      isActive: plan !== 'free',
+      expiresAt: activeEntitlement?.expirationDate || null,
+      purchasedAt: activeEntitlement?.originalPurchaseDate || null,
+      isAutoRenew: activeEntitlement?.willRenew ?? false,
+      entitlements: this.getEntitlementsForPlan(plan),
+      priceEUR: SUBSCRIPTION_PLANS[plan].priceEUR,
+    };
+
+    this.setSubscription(newSubscription);
+  }
+
+  // ─── Purchase Subscription via RevenueCat ───────────────────────────────
 
   async purchasePlan(plan: SubscriptionPlan): Promise<Subscription> {
     try {
@@ -50,38 +131,65 @@ class MonetizationService {
         return this.setSubscription(this.getDefaultSubscription());
       }
 
-      // In production, this calls RevenueCat SDK
-      // For now, simulate the purchase flow
-      const planInfo = SUBSCRIPTION_PLANS[plan];
-      const newSubscription: Subscription = {
-        plan,
-        isActive: true,
-        expiresAt: plan === 'lifetime'
-          ? null
-          : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        purchasedAt: new Date().toISOString(),
-        isAutoRenew: plan !== 'lifetime',
-        entitlements: this.getEntitlementsForPlan(plan),
-        priceEUR: planInfo.priceEUR,
-      };
+      if (!this.isInitialized) {
+        throw new Error('RevenueCat n\'est pas initialise. Verifiez votre connexion.');
+      }
 
-      return this.setSubscription(newSubscription);
-    } catch (error) {
+      // Get available offerings from RevenueCat
+      const offerings = await Purchases.getOfferings();
+      const currentOffering = offerings.current;
+
+      if (!currentOffering) {
+        throw new Error('Aucune offre disponible. Reessayez plus tard.');
+      }
+
+      // Map plan to RevenueCat package identifier
+      const packageId = this.getPackageIdForPlan(plan);
+      const targetPackage = currentOffering.availablePackages.find(
+        (pkg: PurchasesPackage) => pkg.identifier === packageId,
+      );
+
+      if (!targetPackage) {
+        throw new Error(`L'offre ${SUBSCRIPTION_PLANS[plan].name} n'est pas disponible.`);
+      }
+
+      // Execute the real purchase through RevenueCat -> Google Play / App Store
+      const { customerInfo } = await Purchases.purchasePackage(targetPackage);
+      this.handleCustomerInfoUpdate(customerInfo);
+
+      console.log(LOG_TAG, 'Purchase successful:', plan);
+      return this.currentSubscription;
+    } catch (error: unknown) {
+      // Handle user cancellation gracefully
+      const purchaseError = error as { userCancelled?: boolean };
+      if (purchaseError.userCancelled) {
+        console.log(LOG_TAG, 'Purchase cancelled by user');
+        return this.currentSubscription;
+      }
       console.error(LOG_TAG, 'Purchase failed:', error);
       throw error;
     }
   }
 
-  // ─── Restore Purchases ────────────────────────────────────────────────────
+  // ─── Restore Purchases via RevenueCat ───────────────────────────────────
 
   async restorePurchases(): Promise<Subscription> {
     try {
       console.log(LOG_TAG, 'Restoring purchases...');
-      // In production: RevenueCat.restorePurchases()
-      const saved = await storageService.get<Subscription>('subscription_state');
-      if (saved && saved.isActive) {
-        return this.setSubscription(saved);
+
+      if (!this.isInitialized) {
+        // Fallback to local cache
+        const saved = await storageService.get<Subscription>('subscription_state');
+        if (saved && saved.isActive) {
+          return this.setSubscription(saved);
+        }
+        return this.currentSubscription;
       }
+
+      const customerInfo = await Purchases.restorePurchases();
+      this.handleCustomerInfoUpdate(customerInfo);
+
+      console.log(LOG_TAG, 'Restore complete. Plan:', this.currentSubscription.plan);
       return this.currentSubscription;
     } catch (error) {
       console.error(LOG_TAG, 'Restore failed:', error);
@@ -89,23 +197,27 @@ class MonetizationService {
     }
   }
 
-  // ─── Cancel Subscription ──────────────────────────────────────────────────
+  // ─── Cancel Subscription ────────────────────────────────────────────────
 
   async cancelSubscription(): Promise<void> {
     try {
       console.log(LOG_TAG, 'Cancelling subscription...');
+      // RevenueCat handles cancellation through the store.
+      // We just mark auto-renew as off locally; actual cancellation
+      // happens in Google Play / App Store subscription management.
       const updated: Subscription = {
         ...this.currentSubscription,
         isAutoRenew: false,
       };
       await this.setSubscription(updated);
+      console.log(LOG_TAG, 'Auto-renew disabled locally. User must cancel in store settings.');
     } catch (error) {
       console.error(LOG_TAG, 'Cancel failed:', error);
       throw error;
     }
   }
 
-  // ─── Entitlement Checking ─────────────────────────────────────────────────
+  // ─── Entitlement Checking ───────────────────────────────────────────────
 
   checkEntitlement(feature: string): boolean {
     return this.currentSubscription.entitlements.includes(feature);
@@ -132,7 +244,7 @@ class MonetizationService {
     return PLAN_LIMITS[this.currentSubscription.plan].adsEnabled;
   }
 
-  // ─── Subscription Info ────────────────────────────────────────────────────
+  // ─── Subscription Info ──────────────────────────────────────────────────
 
   getCurrentSubscription(): Subscription {
     return { ...this.currentSubscription };
@@ -160,7 +272,7 @@ class MonetizationService {
     return this.currentSubscription.isAutoRenew;
   }
 
-  // ─── AdMob ────────────────────────────────────────────────────────────────
+  // ─── AdMob ──────────────────────────────────────────────────────────────
 
   getBannerAdId(): string {
     return ADMOB_CONFIG.bannerId;
@@ -174,7 +286,7 @@ class MonetizationService {
     return ADMOB_CONFIG.rewardedId;
   }
 
-  // ─── Subscription Listeners ───────────────────────────────────────────────
+  // ─── Subscription Listeners ─────────────────────────────────────────────
 
   onSubscriptionChange(listener: (sub: Subscription) => void): () => void {
     this.subscriptionListeners.push(listener);
@@ -183,7 +295,7 @@ class MonetizationService {
     };
   }
 
-  // ─── Private Helpers ──────────────────────────────────────────────────────
+  // ─── Private Helpers ────────────────────────────────────────────────────
 
   private async setSubscription(subscription: Subscription): Promise<Subscription> {
     this.currentSubscription = subscription;
@@ -215,6 +327,15 @@ class MonetizationService {
         return ['unlimited_audits', 'unlimited_layerings', 'ocr', 'quantum_genesis', 'no_ads', 'pdf_export', 'premium_skins', 'lifetime'];
       default:
         return [];
+    }
+  }
+
+  private getPackageIdForPlan(plan: SubscriptionPlan): string {
+    switch (plan) {
+      case 'alquimist': return '$rc_monthly';
+      case 'master': return '$rc_annual';
+      case 'lifetime': return '$rc_lifetime';
+      default: return '';
     }
   }
 }
