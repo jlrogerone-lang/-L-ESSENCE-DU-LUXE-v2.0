@@ -1,21 +1,33 @@
-MIT License
+LICENCIA DE USO Y PROPIEDAD INTELECTUAL (EULA)
+PROPIEDAD EXCLUSIVA Y CONFIDENCIALIDAD
 
-Copyright (c) 2025 L'Essence du Luxe
+Copyright (c) 2025 L'Essence du Luxe. Todos los derechos reservados.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. PROPIEDAD INTELECTUAL
+Este código fuente, los algoritmos, la lógica empresarial, la arquitectura y los archivos asociados (el "Software") son propiedad intelectual exclusiva y activos confidenciales de L'Essence du Luxe ("El Propietario"). Este Software está protegido por leyes de derechos de autor internacionales y tratados de propiedad intelectual.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. PROHIBICIÓN TOTAL DE USO NO AUTORIZADO
+Queda estrictamente prohibida cualquier forma de:
+   a) Copia, reproducción, distribución o divulgación del Software.
+   b) Ingeniería inversa, descompilación, desensamblaje o modificación del código.
+   c) Uso comercial, sublicenciamiento o venta sin un contrato escrito y firmado explícitamente por El Propietario.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. CONSECUENCIAS LEGALES Y FINANCIERAS
+El acceso no autorizado, el robo, la filtración o el uso indebido de este Software constituirá una violación grave de los derechos de propiedad intelectual y secretos comerciales.
+
+El Propietario se reserva el derecho de emprender acciones legales civiles y penales inmediatas contra cualquier individuo o entidad que infrinja estos términos. Dichas acciones buscarán el máximo rigor de la ley, incluyendo, pero no limitado a:
+   - Indemnizaciones por daños y perjuicios por valor multimillonario debido a la pérdida de ventaja competitiva y activos comerciales.
+   - Costos legales completos y honorarios de abogados.
+   - Medidas cautelares inmediatas para detener el uso del Software.
+
+4. SIN GARANTÍAS
+El Software se proporciona "tal cual", exclusivamente para uso interno autorizado por El Propietario.
+
+EL USO, POSESIÓN O VISUALIZACIÓN DE ESTE CÓDIGO POR PERSONAS NO AUTORIZADAS ES ILEGAL.
+
+/*
+ * Copyright (c) 2025 L'Essence du Luxe. All Rights Reserved.
+ * This software is proprietary and confidential.
+ * Unauthorized copying of this file, via any medium, is strictly prohibited.
+ * Offenders will be liable for significant financial damages.
+ */
