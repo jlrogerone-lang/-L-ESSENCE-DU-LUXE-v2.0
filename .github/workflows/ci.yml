@@ -22,13 +22,11 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        # CAMBIO: Usamos 'install' en lugar de 'ci' para evitar errores si falta el package-lock
-        run: npm install
+        # SOLUCIÓN: --legacy-peer-deps ignora conflictos estrictos de versiones
+        run: npm install --legacy-peer-deps
 
       - name: Type Check (TypeScript)
-        # Ejecuta la comprobación de tipos sin generar archivos
         run: npm run type-check
 
       - name: Linting
-        # Verifica la calidad del código
         run: npm run lint
