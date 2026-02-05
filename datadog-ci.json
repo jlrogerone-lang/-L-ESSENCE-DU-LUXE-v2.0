@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DataDog/datadog-ci/master/src/commands/synthetics/schemas/datadog-ci.json",
+  "apiKey": "${DATADOG_API_KEY}",
+  "appKey": "${DATADOG_APP_KEY}",
+  "datadogSite": "datadoghq.eu",
+  "failOnCriticalErrors": true,
+  "failOnMissingTests": false,
+  "failOnTimeout": true,
+  "defaultTestOverrides": {
+    "allowInsecureCertificates": false,
+    "basicAuth": null,
+    "deviceIds": ["chrome.laptop_large"],
+    "locations": ["aws:eu-west-1"],
+    "retry": {
+      "count": 1,
+      "interval": 300
+    },
+    "startUrlSubstitutionRegex": null
+  },
+  "files": [],
+  "global": {},
+  "pollingTimeout": 120000,
+  "proxy": null,
+  "publicIds": [],
+  "selectiveRerun": false,
+  "subdomain": "app",
+  "testSearchQuery": "tag:env:production tag:app:essence-du-luxe",
+  "tunnel": false
+}

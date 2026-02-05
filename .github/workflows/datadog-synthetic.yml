@@ -1,0 +1,149 @@
+# ============================================================================
+# L'ESSENCE DU LUXE v2.0 - Datadog Synthetic Tests
+# Ejecuta tests sintéticos de Datadog para verificar endpoints de producción
+# ============================================================================
+
+name: Run Datadog Synthetic tests
+
+on:
+  # Ejecutar en push a main (después del deploy)
+  push:
+    branches:
+      - main
+  # Ejecutar en PRs para validar antes de merge
+  pull_request:
+    branches:
+      - main
+  # Permitir ejecución manual
+  workflow_dispatch:
+    inputs:
+      test_search_query:
+        description: 'Datadog test search query (ej: tag:env:production)'
+        required: false
+        default: ''
+
+# Evitar ejecuciones duplicadas
+concurrency:
+  group: datadog-synthetic-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Región de Datadog (us1, us3, us5, eu, ap1)
+  DATADOG_SITE: 'datadoghq.eu'
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  # Job: Run Synthetic Tests
+  # ─────────────────────────────────────────────────────────────────────────
+  synthetic-tests:
+    name: Synthetic Tests
+    runs-on: ubuntu-latest
+    # Solo ejecutar si los secrets están configurados
+    if: ${{ vars.DATADOG_ENABLED == 'true' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      # ─── Checkout ─────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ─── Setup Node.js ────────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ─── Install Dependencies ─────────────────────────────────────────────
+      - name: Install dependencies
+        run: npm ci
+
+      # ─── Validate Secrets ─────────────────────────────────────────────────
+      - name: Validate Datadog credentials
+        id: validate
+        run: |
+          if [ -z "${{ secrets.DATADOG_API_KEY }}" ]; then
+            echo "::error::DATADOG_API_KEY secret is not configured"
+            echo "valid=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          if [ -z "${{ secrets.DATADOG_APP_KEY }}" ]; then
+            echo "::error::DATADOG_APP_KEY secret is not configured"
+            echo "valid=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          echo "valid=true" >> $GITHUB_OUTPUT
+          echo "✅ Datadog credentials validated"
+
+      # ─── Install Datadog CI ───────────────────────────────────────────────
+      - name: Install Datadog CI
+        run: npm install -g @datadog/datadog-ci
+
+      # ─── Run Synthetic Tests ──────────────────────────────────────────────
+      - name: Run Datadog Synthetic Tests
+        env:
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          DATADOG_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+          DATADOG_SITE: ${{ env.DATADOG_SITE }}
+        run: |
+          echo "🔍 Running Datadog Synthetic Tests..."
+
+          # Si hay query de búsqueda manual, usarla
+          SEARCH_QUERY="${{ github.event.inputs.test_search_query }}"
+
+          if [ -n "$SEARCH_QUERY" ]; then
+            echo "Using custom search query: $SEARCH_QUERY"
+            datadog-ci synthetics run-tests \
+              --search "$SEARCH_QUERY" \
+              --failOnCriticalErrors \
+              --failOnMissingTests
+          else
+            # Ejecutar tests por defecto (configurados en datadog-ci.json si existe)
+            if [ -f "datadog-ci.json" ]; then
+              echo "Using datadog-ci.json configuration"
+              datadog-ci synthetics run-tests \
+                --config datadog-ci.json \
+                --failOnCriticalErrors
+            else
+              # Ejecutar todos los tests de producción
+              echo "Running all production synthetic tests"
+              datadog-ci synthetics run-tests \
+                --search "tag:env:production" \
+                --failOnCriticalErrors \
+                --failOnMissingTests || true
+            fi
+          fi
+
+      # ─── Upload Results ───────────────────────────────────────────────────
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: datadog-synthetic-results
+          path: |
+            datadog-ci-*.json
+            synthetic-*.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Job: Skip if Datadog not enabled
+  # ─────────────────────────────────────────────────────────────────────────
+  skip-notice:
+    name: Datadog Not Configured
+    runs-on: ubuntu-latest
+    if: ${{ vars.DATADOG_ENABLED != 'true' && github.event_name != 'workflow_dispatch' }}
+
+    steps:
+      - name: Notice
+        run: |
+          echo "⏭️ Datadog Synthetic Tests skipped"
+          echo ""
+          echo "To enable Datadog tests:"
+          echo "1. Go to Settings > Secrets and variables > Actions"
+          echo "2. Add these secrets:"
+          echo "   - DATADOG_API_KEY: Your Datadog API key"
+          echo "   - DATADOG_APP_KEY: Your Datadog Application key"
+          echo "3. Add this variable:"
+          echo "   - DATADOG_ENABLED: true"
+          echo ""
+          echo "Get your keys from: https://app.datadoghq.eu/organization-settings/api-keys"
