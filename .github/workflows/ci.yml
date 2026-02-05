@@ -22,12 +22,13 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        # CAMBIO: Usamos 'install' en lugar de 'ci' para evitar errores si falta el package-lock
+        run: npm install
 
       - name: Type Check (TypeScript)
-        # Esto ejecuta 'tsc --noEmit' según tu package.json
+        # Ejecuta la comprobación de tipos sin generar archivos
         run: npm run type-check
 
       - name: Linting
-        # Verifica que no haya errores de sintaxis graves
+        # Verifica la calidad del código
         run: npm run lint
