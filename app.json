@@ -1,11 +1,13 @@
 {
   "expo": {
     "name": "L'Essence du Luxe",
-    "slug": "essence-du-luxe-v2",
+    "slug": "essence-du-luxe",
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "essenceduluxe",
     "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -15,9 +17,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTabletMode": true,
+      "supportsTablet": true,
       "bundleIdentifier": "com.essenceduluxe.perfumerie",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,67 +30,94 @@
         "backgroundColor": "#000000"
       },
       "package": "com.essenceduluxe.perfumerie",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [
-        "android.permission.INTERNET",
-        "android.permission.CAMERA",
-        "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
-      ]
+        "INTERNET",
+        "CAMERA",
+        "ACCESS_NETWORK_STATE",
+        "READ_MEDIA_IMAGES",
+        "VIBRATE",
+        "com.google.android.gms.permission.AD_ID"
+      ],
+      "googleServicesFile": "./google-services.json",
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
-      "favicon": "./assets/icon.png",
-      "bundler": "metro"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "static"
     },
     "plugins": [
+      "expo-router",
       [
         "expo-camera",
         {
-          "cameraPermission": "Acceso a cámara para escanear perfumes"
-        }
-      ],
-      "expo-secure-store",
-      "expo-blur",
-      "expo-haptics",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "minSdkVersion": 26,
-            "compileSdkVersion": 34,
-            "targetSdkVersion": 34,
-            "buildToolsVersion": "34.0.0",
-            "usesCleartextTraffic": false
-          }
+          "cameraPermission": "L'Essence du Luxe necesita acceso a la cámara para escanear y reconocer perfumes mediante IA.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Permite acceso a tu galería"
+          "photosPermission": "Permite acceso a tu galería para seleccionar fotos de perfumes y analizarlas con IA."
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": false
+        }
+      ],
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "kotlinVersion": "1.9.25",
+            "usesCleartextTraffic": false,
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "newArchEnabled": true
+          },
+          "ios": {
+            "deploymentTarget": "15.1",
+            "newArchEnabled": true
+          }
+        }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY",
+          "iosAppId": "ca-app-pub-XXXXXXXXXXXXXXXX~ZZZZZZZZZZ",
+          "userTrackingUsageDescription": "Este identificador se utilizará para mostrarte anuncios personalizados."
         }
       ]
     ],
+    "experiments": {
+      "typedRoutes": true
+    },
     "updates": {
+      "enabled": true,
       "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/xxxxxxx"
+      "url": "https://u.expo.dev/YOUR_PROJECT_ID"
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "extra": {
-      "eas": {
-        "projectId": "xxxxxxx"
+      "router": {
+        "origin": false
       },
-      "firebaseConfig": {
-        "apiKey": "${EXPO_PUBLIC_FIREBASE_API_KEY}",
-        "authDomain": "${EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN}",
-        "projectId": "${EXPO_PUBLIC_FIREBASE_PROJECT_ID}",
-        "storageBucket": "${EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET}",
-        "messagingSenderId": "${EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}",
-        "appId": "${EXPO_PUBLIC_FIREBASE_APP_ID}"
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
       }
-    }
+    },
+    "owner": "your-expo-username"
   }
 }

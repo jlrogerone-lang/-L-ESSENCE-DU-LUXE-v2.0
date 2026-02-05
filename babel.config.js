@@ -1,18 +1,28 @@
+// ============================================================================
+// L'ESSENCE DU LUXE v2.0 - Babel Configuration
+// Expo SDK 52 + NativeWind v4 + Reanimated 3
+// ============================================================================
+
 module.exports = function (api) {
   api.cache(true);
+
   return {
     presets: [
       ['babel-preset-expo', { jsxImportSource: 'nativewind' }],
-      'nativewind/babel',
     ],
     plugins: [
+      // NativeWind v4 - must come before reanimated
       'nativewind/babel',
-      'react-native-reanimated/plugin',
+
+      // Module resolver for path aliases
       [
         'module-resolver',
         {
+          root: ['./'],
+          extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
           alias: {
             '@': './src',
+            '@app': './app',
             '@contexts': './src/contexts',
             '@services': './src/services',
             '@screens': './src/screens',
@@ -22,13 +32,13 @@ module.exports = function (api) {
             '@utils': './src/utils',
             '@styles': './src/styles',
             '@data': './src/data',
-            '@navigation': './src/navigation',
+            '@assets': './assets',
           },
         },
       ],
-      ['@babel/plugin-transform-class-properties', { loose: true }],
-      ['@babel/plugin-transform-private-methods', { loose: true }],
-      ['@babel/plugin-transform-private-property-in-object', { loose: true }],
+
+      // Reanimated - MUST be last
+      'react-native-reanimated/plugin',
     ],
   };
 };

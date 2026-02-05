@@ -65,6 +65,19 @@ coverage/
 # EAS Build
 .eas/
 
+# Google Services (contains API keys)
+google-services.json
+google-play-service-account.json
+GoogleService-Info.plist
+
+# iOS (Expo generates these)
+ios/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
 # Lock files (optional)
 # yarn.lock
 # package-lock.json

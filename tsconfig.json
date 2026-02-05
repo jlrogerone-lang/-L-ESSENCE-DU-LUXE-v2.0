@@ -1,28 +1,25 @@
 {
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020"],
+    "target": "ESNext",
+    "lib": ["ES2022", "DOM"],
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "allowJs": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@app/*": ["app/*"],
       "@contexts/*": ["src/contexts/*"],
       "@services/*": ["src/services/*"],
       "@screens/*": ["src/screens/*"],
@@ -32,16 +29,27 @@
       "@utils/*": ["src/utils/*"],
       "@styles/*": ["src/styles/*"],
       "@data/*": ["src/data/*"],
-      "@navigation/*": ["src/navigation/*"]
+      "@assets/*": ["assets/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "types": ["react-native", "jest", "@testing-library/react-native"]
+    "types": ["nativewind/types"]
   },
-  "include": ["src", "types"],
-  "exclude": ["node_modules", "dist", ".expo", ".next"],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js",
+    "dist",
+    ".expo"
+  ]
 }
