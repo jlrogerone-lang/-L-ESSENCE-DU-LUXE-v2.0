@@ -22,7 +22,6 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        # SOLUCIÓN: --legacy-peer-deps ignora conflictos estrictos de versiones
         run: npm install --legacy-peer-deps
 
       - name: Type Check (TypeScript)
